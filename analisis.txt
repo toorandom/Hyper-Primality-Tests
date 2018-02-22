@@ -1,0 +1,192 @@
+AN
+
+ 1/2*(d - 1)*(A*B*(A^2 - 3*B)) - 3*B^2*A  - (d + 3)*(h + sigma1)
+
+AD
+
+
+A^4 - 4*A^2*B + 2*B^2+ (-d + 1)*B*(A^2 - 2*B) + 1/2*(-d + 7)*B^2
+
+
+an:
+
++ 1/2*(d - 1)*(A*B*(A^2-3*B)) 
+- 3*B^2*A 
+- (d + 3)*(h + sigma1)
+
+
+/
+ad:
+S^4 + U^4
++ (-d + 1)*(A^2*B-2*B^2)
++ 1/2*(-d + 7)*S^2*U^2 
+
+
+--------------------------------------------------------------------
+Bn
+
+ B^2*(A^2 - 2*B) + (d + 1)*B*A  - (d + 1)*h*A + 1/2*(d + 7)*B^3 
+
+Bd
+
+A^4 - 4*A^2*B + 2*B^2 + (-d + 1)*B*(A^2-2*B) + 1/2*(-d + 7)*B^2
+
+---------------------------------------------------------------------
+
+
+
+CN(S-U)
+
+
++ 1/2*(d - 5)*B^2*(sym_stuv(3))-5*B^3*(sym_stuv(1))+(5*d + 10)*B^3*(sym_svut(1))
++ 1/2*(-7*d - 9)*B^2*(sym_svut(3))+(-3*d - 1)*B*(sym_svut(5))+(d + 3)*(sym_svut(7)) 
++ (-8*d - 16)*a*B*(sym_svut(0))+ (4*d + 8)*a*(A^2 - 2*B)*(sym_svut(0))
+ 
+-----------------------------------------------------
+
+CN(S-U)
+
+
++ 1/2*(d - 5)*B^2*(A^4*C - A^3*D - 4*A^2*B*C + 3*A*B*D + 2*B^2*C)
+
+
+-5*B^3*(A^2*C - A*D - 2*B*C)
+
+
++ (5*d + 10)*B^3*(2*B*C-A*D)
+
++ 1/2*(-7*d - 9)*B^2 * (A^2*B*C + 3*A*B*D - 2*B^2*C - A^3*D) 
+
+
++ (-3*d - 1)*B*(A^4*B*C + 5*A^3*B*D - 4*A^2*B^2*C - 5*A*B^2*D + 2*B^3*C - A^5*D)
+
+
++ (d + 3)*(A^6*B*C + 7*A^5*B*D - 6*A^4*B^2*C - 14*A^3*B^2*D + 9*A^2*B^3*C + 7*A*B^3*D - 2*B^4*C - A^7*D) 
+
++ (-8*d - 16)*a*B*(2*D-A*C)
+
++ (4*d + 8)*a*(A^2 - 2*B)*(2*D-A*C)
+ 
+
+ ----------------------------------------------------------
+Dn(S-U)
+
+- 1/2*(d + 5)*(T*S^5*U^3 + S^3*V*U^5) 
+
++ 1/2*(5*d + 5)*(T*S^4*U^4 + S^4*V*U^4)
+
++ (2*d + 6)*h*(T*S^3 + T*U^3 + S^3*V + V*U^3)
+
++ (2*d + 6)*(S^5*V*U^3 + T*S^3*U^5) 
+
+- (2*d + 6)*h*(S^2*V*U + S*V*U^2 + T*S*U^2 + T*S^2*U)  
+
+- 1/2*(9*d + 17)*(T*S^2*U^6 + S^6*V*U^2) 
+
++ 1/2*(d + 3)*(S^7*V*U + T*S*U^7) 
+
++ T*U^8 + S^8*V 
+
+===========================================
+Dn(S-U)
+Dn(S-U)
+
+
+
+
+- 1/2*(d + 5)*B^2*(sym_stuv(2))+ 1/2*(5*d + 5)*B^4*(2*D-A*C)-(2*d + 6)*h*A*(2*D-A*C)*(A^2 - 3*B)
++ (2*d + 6)*B^3*sym_svut(2) + (2*d + 6)*h*A*B*(2*D-A*C)- 1/2*(9*d + 17)*B^2 * sym_svut(4) 
++ 1/2*(d + 3)*B*sym_svut(6) + sym_svut(8)
+
+-------------------------------------------------------
+
+Dd(S-U)
+
+ A^8- 8*A^6*B +20*A^4*B^2-16*A^2*B^3+2*B^4-1/2*(3*d + 1)*(A^6*B-6*A^4*B^2+9*A^2*B^3-2*B^4)
++ 1/2*(3*d + 11)*(A^4*B^2-4*A^2*B^3+2*B^4)-1/2*(5*d + 17)*(A^2*B^3-2*B^4)+(5*d + 5)*B^4
+
+
+===========================================
+
+
+-----------------------------------------------------------------------------------------------------
+// These two functions return the symmetric representation of the
+// functions
+// s^n * v + u^n * t       = sym_svut(n)
+// s^n * t + u^n * v       = sym_stuv(n)
+// in the Jacobian of a genus 2 curve given by the symmetric functions
+// In terms of A=u+s, B=u*s,  C=(t-v)/(s-u), D=(s*v-u*t)/(s-u)
+
+RR<A,B,C,D> := PolynomialRing(Rationals(),4);
+
+sym_stuv := function(n) 
+	if n eq 0 then
+		return 2*D+A*C;   // This is t+v
+	end if;
+	if n eq 1 then 
+		return   A*D+ A^2*C - 2*B*C;   // This is st+uv
+	end if;
+return A*$$(n-1) - B*$$(n-2);     // Fibonacci like Sequence since s,u are roots of X^2 -AX + B
+end function;
+
+
+sym_svut := function(n) 
+	if n eq 0 then
+		return 2*D+A*C;   // This is t+v
+	end if;
+	if n eq 1 then 
+		return A*D + 2*B*C;   // This is sv+ut
+	end if;
+return A*$$(n-1) - B*$$(n-2);     // Fibonacci like Sequence since s,u are roots of X^2 -AX + B
+end function;
+
+
+
+----------------------------------------------------------------------------------------------------
+
+RR<A,B,C,D> := PolynomialRing(Rationals(),4);
+
+sym_stuv := function(n) 
+	if n eq 0 then
+		return 2*D-A*C;   // This is t+v
+	end if;
+	if n eq 1 then 
+		return   -A*D+ A^2*C - 2*B*C;   // This is st+uv
+	end if;
+return -A*$$(n-1) - B*$$(n-2);     // Fibonacci like Sequence since s,u are roots of X^2 -AX + B
+end function;
+
+
+sym_svut := function(n) 
+	if n eq 0 then
+		return 2*D-A*C;   // This is t+v
+	end if;
+	if n eq 1 then 
+		return -A*D + 2*B*C;   // This is sv+ut
+	end if;
+return -A*$$(n-1) - B*$$(n-2);     // Fibonacci like Sequence since s,u are roots of X^2 -AX + B
+end function;
+
+
+ E := A1+ A2;
+ An := Numerator(Coefficient(E[1],1));
+ Ad := Denominator(Coefficient(E[1],1));
+ Bn := Numerator(Coefficient(E[1],0));
+ Bd := Denominator(Coefficient(E[1],0));
+ Cn := Numerator(Coefficient(E[2],1));
+ Cd := Denominator(Coefficient(E[2],1));
+ Dd := Denominator(Coefficient(E[2],0));
+ Dn := Numerator(Coefficient(E[2],0));   
+
+ Cn := Cn*R!(S-U);
+ Cd := Cd*R!(S-U);
+ Dn := Dn*R!(S-U);
+ Dd := Dd*R!(S-U);
+
+ a := -(u+s);
+ b := u*s;
+ c := (t-v)/(s-u);
+ d := (s*v-u*t)/(s-u);
+
+
+

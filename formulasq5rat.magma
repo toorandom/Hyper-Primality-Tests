@@ -1,0 +1,15 @@
+BF<d> := QuadraticField(5);
+//RF<a> := RationalFunctionField(BF);
+a:=10;
+P<T,S,V,U>  := PolynomialRing(BF,4);
+R := quo<P | T^2 - (S^5 + a), V^2 - (U^5 + a)  >;
+F<t,s,v,u> := FieldOfFractions(R);
+G<x> := PolynomialRing(F);
+f := x^5 + a ;
+H := HyperellipticCurve(f);
+J := Jacobian(H);
+GP:= J![x^2 - (s+u)*x + s*u, x*((t-v)/(s-u)) + ((-u*t + s*v)/(s-u))];
+e := (-1 + d)/2;
+A1 := J![x^2 - e*s*x + s^2, t];
+A2 := J![x^2 - e*u*x + u^2, v];
+D := A1 + A2;

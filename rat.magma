@@ -1,0 +1,163 @@
+
+
+mulz5n := function(J,D,n)
+
+F := BaseField(J);
+P<X> := PolynomialRing(F);
+z5 := (RootOfUnity(5,F))^n;
+if Degree(D[1]) eq 1 then 
+	a := z5*Coefficient(D[1],0);
+	b := Coefficient(D[2],0);
+	D5 := J![X+a,b];
+	return D5;
+end if;
+A := z5*Coefficient(D[1],1);
+B := z5^2*Coefficient(D[1],0);
+C := (1/z5)*Coefficient(D[2],1);
+D := Coefficient(D[2],0);
+
+U := X^2 + A*X + B;
+V := C*X + D;
+D5 := J![U,V];
+return D5;
+end function;
+
+
+mulsq5 := function(J,D)
+
+D1 := mulz5n(J,D,1);
+D4 := mulz5n(J,D,4);
+D0 := D;
+
+return 2*D1 + 2*D4 + D0;
+
+end function;
+
+mulend := function(J,D)
+D1 := mulz5n(J,D,1);
+D4 := mulz5n(J,D,4);
+
+return D1 + D4;
+
+end function;
+
+
+
+
+RR<A,B,C,D> := PolynomialRing(Rationals(),4);
+
+sym_stuv := function(n) 
+	if n eq 0 then
+		return 2*D-A*C;   // This is t+v
+	end if;
+	if n eq 1 then 
+		return   -A*D+ A^2*C - 2*B*C;   // This is st+uv
+	end if;
+return -A*$$(n-1) - B*$$(n-2);     // Fibonacci like Sequence since s,u are roots of X^2 -AX + B
+end function;
+
+
+sym_svut := function(n) 
+	if n eq 0 then
+		return 2*D-A*C;   // This is t+v
+	end if;
+	if n eq 1 then 
+		return -A*D + 2*B*C;   // This is sv+ut
+	end if;
+return -A*$$(n-1) - B*$$(n-2);     // Fibonacci like Sequence since s,u are roots of X^2 -AX + B
+end function;
+
+
+
+
+
+mulsq5r := function(J,D,h) 
+
+F := BaseField(J);
+d := Sqrt(F!5);
+
+A := Coefficient( D[1],1);
+B := Coefficient( D[1],0);
+C := Coefficient( D[2],1);
+D := Coefficient( D[2],0);
+
+vec := [A,B,C,D];
+
+svut0 := Evaluate(sym_svut(0),vec);
+svut1 := Evaluate(sym_svut(1),vec);
+svut2 := Evaluate(sym_svut(2),vec);
+svut3 := Evaluate(sym_svut(3),vec);
+svut4 := Evaluate(sym_svut(4),vec);
+svut5 := Evaluate(sym_svut(5),vec);
+svut6 := Evaluate(sym_svut(6),vec);
+svut7 := Evaluate(sym_svut(7),vec);
+svut8 := Evaluate(sym_svut(8),vec);
+
+stuv1 := Evaluate(sym_stuv(1),vec);
+stuv2 := Evaluate(sym_stuv(2),vec);
+stuv3 := Evaluate(sym_stuv(3),vec);
+
+sigma1 :=(1/2)*(2*h - A^5 - 5*A*B^2 + 5*A^3*B - C^2 *(A^2 - 4*B)); 
+
+An := 1/2*(d - 1)*(A*B*(A^2 - 3*B)) - 3*B^2*A  - (d + 3)*(h + sigma1);
+Ad := A^4 - 4*A^2*B + 2*B^2+ (-d + 1)*B*(A^2 - 2*B) + 1/2*(-d + 7)*B^2;
+
+
+
+Bn := B^2*(A^2 - 2*B) + (d + 1)*B*A  - (d + 1)*h*A + 1/2*(d + 7)*B^3; 
+Bd := A^4 - 4*A^2*B + 2*B^2 - (d - 1)*B*(A^2-2*B) + 1/2*(-d + 7)*B^2;
+
+
+Cn := 
++ 1/2*(d - 5)*B^2*(stuv3)-5*B^3*(stuv1)+(5*d + 10)*B^3*(svut1)
++ 1/2*(-7*d - 9)*B^2*(svut3)+(-3*d - 1)*B*(svut5)+(d + 3)*(svut7) 
++ (-8*d - 16)*h*B*(svut0)+ (4*d + 8)*h*(A^2 - 2*B)*(svut0);
+
+Cd := (A^2 - 2*B)*(A^3 - 5*A^4*B + 6*A^2*B^2 - B^3- (1/2)*(3*d-1)*(B*(A^4 - 3*A^2*B+B^2)) + 6*(B^2*A^2)- (1/2)*(5*d+5)*B^2);
+ 
+
+Dn := 
+- 1/2*(d + 5)*B^2*(stuv2)+ 1/2*(5*d + 5)*B^4*(2*D-A*C)-(2*d + 6)*h*A*(2*D-A*C)*(A^2 - 3*B)
++ (2*d + 6)*B^3*svut2 + (2*d + 6)*h*A*B*(2*D-A*C)- 1/2*(9*d + 17)*B^2 * svut4 
++ 1/2*(d + 3)*B*svut6 + svut8;
+
+Dd := 
+A^8- 8*A^6*B +20*A^4*B^2-16*A^2*B^3+2*B^4-1/2*(3*d + 1)*(A^6*B-6*A^4*B^2+9*A^2*B^3-2*B^4)
++ 1/2*(3*d + 11)*(A^4*B^2-4*A^2*B^3+2*B^4)-1/2*(5*d + 17)*(A^2*B^3-2*B^4)+(5*d + 5)*B^4;
+
+as := An/Ad;
+bs := Bn/Bd;
+cs := Cn/Cd;
+ds := Dn/Dd;
+
+rvec := [as,bs,cs,ds];
+
+return rvec;
+end function;
+
+h := 10;
+p := (2*5^4 - 1);
+F1 := GF(p);
+P1<x> := PolynomialRing(F1);
+f := x^5+ h;
+H1 := HyperellipticCurve(f);
+J1 := Jacobian(H1);
+Pt1 := J1![x+1,3];
+d1 := 3*Pt1;
+
+F2 := GF(p^2);
+J2 := BaseExtend(J1,F2);
+P2<X> := PolynomialRing(F2);
+Pt2 := J2![X+1,3];
+d2 := 3*Pt2;
+
+
+
+
+
+
+
+
+
+
+

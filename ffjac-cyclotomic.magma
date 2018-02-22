@@ -1,0 +1,18 @@
+K<z> := CyclotomicField(5); 
+F<h> := FunctionField(K);
+PF4<d,c,b,a> := PolynomialRing(F, 4);
+// in this ordering, later d will be eliminated since d=eta(a,b,c)
+PPF4<X> := PolynomialRing(PF4);
+// this relation defines the Affine Jacobian, which is enough for the Function Field of J 
+pol := (X^5+h - (c*X+d)^2)   mod (X^2-a*X+b);
+FFJ<D,C,B,A> := FieldOfFractions(quo<PF4 | Coefficients(pol)>);
+H := HyperellipticCurve(Polynomial([FFJ|h,0,0,0,0,1]));
+J := Jacobian(H);
+// Generic point on J  (With elt<> and Polynomial() helps not defining more rings and variables)
+gp := elt<J | Polynomial([B,-A,1]), Polynomial([D,C]), 2>;
+// Image of the generic point under the action of z and z^-1
+gpz :=  elt<J | Polynomial([B*z^2,-A*z,1]), Polynomial([D,C*z^-1]),2>;
+gpzi := elt<J | Polynomial([B*z^-2,-A*z^-1,1]), Polynomial([D,C*z]),2>;
+npt := gpz + gpzi;
+// This is the map [(1+Sq5)/2]*gp over K<z>, we can use more relations to get it over K<sq5>.
+npt;

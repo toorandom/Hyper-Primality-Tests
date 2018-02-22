@@ -1,0 +1,35 @@
+K<s> := QuadraticField(5);
+F<h> := FunctionField(K);
+PF4<d,c,b,a> := PolynomialRing(F, 4);
+PPF4<X> := PolynomialRing(PF4);
+pol := (X^5+h - (c*X+d)^2)   mod (X^2-a*X+b);
+FFJ<D,C,B,A> := FieldOfFractions(quo<PF4 | Coefficients(pol)>);
+H := HyperellipticCurve(Polynomial([FFJ|h,0,0,0,0,1]));
+J := Jacobian(H);
+gp := elt<J | Polynomial([B,-A,1]), Polynomial([D,C]), 2>;
+// This polynomials are gotten through the action of Z and Z^4 in gp and then modout the cyclotomic part
+as := ((3/2)*A^5+(1/2)*A^5*s-8*A^3*B-2*A^3*B*s-(3/2)*A^2*C^2-(1/2)*A^2*C^2*s+6*A*B^2+A*B^2*s+6*B*C^2+2*B*C^2*s+6*h+2*h*s)/(-3*A^2*B-A^2*B*s+(7/2)*B^2+(3/2)*B^2*s+A^4);
+bs := (-(1/2)*A^6-(1/2)*A^6*s+(5/2)*A^4*B+(5/2)*A^4*B*s+(1/2)*A^3*C^2+(1/2)*A^3*C^2*s-(3/2)*A^2*B^2-(5/2)*A^2*B^2*s-2*A*B*C^2-2*A*B*C^2*s+(3/2)*B^3+(1/2)*B^3*s-2*A*h-2*A*h*s)/(-3*A^2*B-A^2*B*s+(7/2)*B^2+(3/2)*B^2*s+A^4);
+
+cs := 
+(-100*A^3*B*C*h+80*A*B^2*C*h-52*A^3*B*C*h*s+44*A*B^2*C*h*s+(1/2)*A^10*C*s-(5/2)*B^5*C*s+16*C*h^2*s+10*A^2*B^4*C+11*A^5*B*C^3-(25/2)*A^8*B*C+30*A^6*B^2*C+32*B*C^3*h-8*A^2*C^3*h+22*A^5*C*h-20*A^3*B^2*C^3-20*A^4*B^3*C-(1/2)*A^7*C^3*s+(3/2)*A^10*C-(3/2)*A^7*C^3-(13/2)*B^5*C+32*C*h^2+16*B*C^3*h*s-(11/2)*A^8*B*C*s+19*A^6*B^2*C*s+5*A^5*B*C^3*s-22*A^4*B^3*C*s-13*A^3*B^2*C^3*s+10*A^5*C*h*s+12*A^2*B^4*C*s+4*A*B^3*C^3*s-4*A^2*C^3*h*s)/(-(15/2)*A^8*B-(3/2)*A^8*B*s+25*A^6*B^2+9*A^6*B^2*s+A^10-45*A^4*B^3-19*A^4*B^3*s+(75/2)*A^2*B^4+(33/2)*A^2*B^4*s-9*B^5-4*B^5*s);
+
+ds := (8*A*B*C^3*h*s+9*A^2*B^2*C*h*s-19*A^4*B*C*h*s+10*B^4*C^3+24*A*B*C^3*h+45*A^2*B^2*C*h-65*A^4*B*C*h-(1/4)*A^6*B*C^3*s+(1/4)*A^9*B*C*s-4*A^7*B^2*C*s+4*B^3*C*h*s+8*A*C*h^2*s+(7/2)*A*B^5*C*s-12*A^2*B^3*C^3*s-2*A^3*C^3*h*s-(59/4)*A^3*B^4*C*s+(15/4)*A^4*B^2*C^3*s+(31/2)*A^5*B^3*C*s+4*A^6*C*h*s+12*A*B^5*C-(15/4)*A^9*B*C+24*A*C*h^2-(35/2)*A^2*B^3*C^3+(25/2)*A^5*B^3*C-(5/4)*A^4*B^2*C^3+5*A^7*B^2*C+(13/4)*A^6*B*C^3+14*A^6*C*h+4*B^4*C^3*s+10*B^3*C*h+(1/2)*A^11*C-(1/2)*A^8*C^3-6*A^3*C^3*h-(85/4)*A^3*B^4*C)/(-(15/2)*A^8*B-(3/2)*A^8*B*s+25*A^6*B^2+9*A^6*B^2*s+A^10-45*A^4*B^3-19*A^4*B^3*s+(75/2)*A^2*B^4+(33/2)*A^2*B^4*s-9*B^5-4*B^5*s);
+
+// gpt =  (-1+Sqr5)/2 *D 
+gpt := elt<J | Polynomial([bs,-as,1]), Polynomial([ds,cs]), 2>;
+
+// gps = Sqr5*D
+time gps := 2*gpt + gp;
+
+
+KJ := KummerSurface(J);
+
+aS := -Coefficient(gps[1],1); 
+bS := Coefficient(gps[1],0);
+cS := Coefficient(gps[2],1);
+dS := Coefficient(gps[2],0);
+
+
+time ksq := Points(KJ,[1,aS,bS]);
+
